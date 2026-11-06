@@ -1,0 +1,43 @@
+name: Windows-Programm bauen
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Abhängigkeiten installieren
+        run: pip install -r requirements-desktop.txt pytest pillow
+
+      - name: Rechentests
+        run: python -m pytest -q
+
+      - name: Programm bauen
+        run: >
+          pyinstaller --noconfirm --clean --onefile --windowed
+          --name Lkw-Kalkulator
+          --icon assets/icon.png
+          --add-data "assets/icon.png:assets"
+          desktop.py
+
+      - name: Startprobe (Fenster öffnen und wieder schließen)
+        shell: pwsh
+        run: |
+          $p = Start-Process dist\Lkw-Kalkulator.exe -PassThru
+          Start-Sleep -Seconds 10
+          if ($p.HasExited) { Write-Error "Programm ist beim Start abgestürzt (Exit $($p.ExitCode))"; exit 1 }
+          Stop-Process -Id $p.Id
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Lkw-Kalkulator-Windows
+          path: dist/Lkw-Kalkulator.exe

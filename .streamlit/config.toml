@@ -1,0 +1,8 @@
+[server]
+# Nur von diesem Rechner erreichbar, nicht aus dem WLAN/Netzwerk
+address = "localhost"
+port = 8501
+
+[browser]
+# Keine anonymen Nutzungsstatistiken an Streamlit senden
+gatherUsageStats = false
