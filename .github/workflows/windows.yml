@@ -9,9 +9,9 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -37,7 +37,7 @@ jobs:
           if ($p.HasExited) { Write-Error "Programm ist beim Start abgestürzt (Exit $($p.ExitCode))"; exit 1 }
           Stop-Process -Id $p.Id
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: Lkw-Kalkulator-Windows
           path: dist/Lkw-Kalkulator.exe
